@@ -30,7 +30,10 @@
                 "uses": "docker/build-push-action@v5",
                 "with": {
                     "push": true,
-                    "tags": "dojyorin/deno:latest"
+                    "tags": "dojyorin/deno/alpine:latest",
+                    "context": "./src",
+                    "file": "alpine.dockerfile",
+                    "build-args": "DENO_VERSION=v1.38.0"
                 }
             }, {
                 "name": "dispatch release",
