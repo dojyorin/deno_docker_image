@@ -19,9 +19,9 @@
             }, {
                 "run": "readonly v_origin=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name')"
             }, {
-                "run": "git tag -a v0.0.0 -m ''"
+                "run": "git tag -a ${v_origin} -m \"sync https://github.com/denoland/deno/releases/tag/${v_origin}\""
             }, {
-                "run": "git push origin v0.0.0"
+                "run": "git push origin ${v_origin}"
             }]
         }
     }
