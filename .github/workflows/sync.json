@@ -1,0 +1,22 @@
+{
+    "name": "sync",
+    "on": {
+        "schedule": [{
+            "cron": "0 12 * * *"
+        }]
+    },
+    "jobs": {
+        "sync": {
+            "name": "sync: original version",
+            "runs-on": "ubuntu-latest",
+            "steps": [{
+                "name": "clone repository",
+                "uses": "actions/checkout@v3"
+            }, {
+                "run": "git tag -a v0.0.0 -m ''"
+            }, {
+                "run": "git push origin v0.0.0"
+            }]
+        }
+    }
+}
