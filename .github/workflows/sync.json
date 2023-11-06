@@ -13,15 +13,14 @@
                 "name": "clone repository",
                 "uses": "actions/checkout@v3"
             }, {
-                "run": "sudo apt install -y curl yq"
+                "name": "install deno",
+                "uses": "denoland/setup-deno@v1"
             }, {
-                "run": "readonly v_current=$(curl -Ls ${{github.api_url}}/releases/latest | yq '.tag_name')"
+                "name": "compare version",
+                "run": "deno run -A ./script/compare.ts"
             }, {
-                "run": "readonly v_origin=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name')"
-            }, {
-                "run": "git tag -a ${v_origin} -m \"sync https://github.com/denoland/deno/releases/tag/${v_origin}\""
-            }, {
-                "run": "git push origin ${v_origin}"
+                "name": "push tag",
+                "run": "git tag -a ${v_origin} -m 'sync latest denoland/deno' && git push origin ${v_origin}"
             }]
         }
     }
