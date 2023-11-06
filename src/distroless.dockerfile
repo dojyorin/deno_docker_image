@@ -1,9 +1,9 @@
 FROM alpine:latest AS deno
 
-ARG DENO_VERSION
+ARG DENO_VERSION="v1.38.0"
 
 RUN apk --update --no-cache add curl
-RUN curl -Ls https://github.com/denoland/deno/releases/download/${DENO_VERSION}/deno-x86_64-unknown-linux-gnu.zip | unzip -q -d /tmp -
+RUN curl -Ls https://github.com/denoland/deno/releases/download/${DENO_VERSION}/deno-$(arch)-unknown-linux-gnu.zip | unzip -q -d /tmp -
 
 FROM gcr.io/distroless/cc-debian12:latest
 

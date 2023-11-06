@@ -1,9 +1,9 @@
 FROM alpine:latest AS deno
 
-ARG DENO_VERSION
+ARG DENO_VERSION="v1.38.0"
 
 RUN apk --update --no-cache add curl
-RUN curl -Ls https://github.com/denoland/deno/releases/download/${DENO_VERSION}/deno-x86_64-unknown-linux-gnu.zip | unzip -q -d /tmp -
+RUN curl -Ls https://github.com/denoland/deno/releases/download/${DENO_VERSION}/deno-$(arch)-unknown-linux-gnu.zip | unzip -q -d /tmp -
 
 FROM gcr.io/distroless/cc-debian12:latest AS cc
 
@@ -16,6 +16,6 @@ COPY --from=cc /etc/ld.so.conf.d/x86_64-linux-gnu.conf /etc/ld.so.conf.d/
 COPY --from=cc /usr/lib/x86_64-linux-gnu/gconv/* /usr/lib/x86_64-linux-gnu/gconv/
 RUN mkdir /lib64 && ln -s /lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 /lib64/
 
-USER nonroot
+USER nobody
 ENTRYPOINT ["/usr/local/bin/deno"]
 CMD ["eval", "console.log('Welcome to Deno!');"]
