@@ -5,16 +5,23 @@ ARG DENO_VERSION="v1.38.0"
 RUN apk --update --no-cache add curl
 RUN curl -Ls https://github.com/denoland/deno/releases/download/${DENO_VERSION}/deno-$(arch)-unknown-linux-gnu.zip | unzip -q -d /tmp -
 
-FROM gcr.io/distroless/cc-debian12:latest AS cc
+FROM gcr.io/distroless/cc-debian12:debug AS cc
+
+RUN cp -rf /lib/$(arch)-linux-gnu /tmp/cc
+RUN cp -rf /usr/lib/$(arch)-linux-gnu/gconv /tmp/gconv
+RUN cp -f /etc/nsswitch.conf /tmp/
+RUN cp -f /etc/ld.so.conf.d/$(arch)-linux-gnu.conf /tmp/cc.conf
+RUN sed -r -i -e "s/$(arch)/cc/" /tmp/cc.conf
 
 FROM alpine:latest
 
 COPY --from=deno --chown=root:root --chmod=755 /tmp/deno /usr/local/bin/
-COPY --from=cc /lib/x86_64-linux-gnu/* /lib/x86_64-linux-gnu/
-COPY --from=cc /etc/nsswitch.conf /etc/
-COPY --from=cc /etc/ld.so.conf.d/x86_64-linux-gnu.conf /etc/ld.so.conf.d/
-COPY --from=cc /usr/lib/x86_64-linux-gnu/gconv/* /usr/lib/x86_64-linux-gnu/gconv/
-RUN mkdir /lib64 && ln -s /lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 /lib64/
+
+COPY --from=cc /tmp/nsswitch.conf /etc/
+COPY --from=cc /tmp/cc.conf /etc/ld.so.conf.d/
+COPY --from=cc /tmp/cc /lib/
+COPY --from=cc /tmp/gconv /usr/lib/cc/
+RUN mkdir /lib64 && ln -s /lib/cc/ld-linux-$(arch).so.2 /lib64/
 
 USER nobody
 ENTRYPOINT ["/usr/local/bin/deno"]
