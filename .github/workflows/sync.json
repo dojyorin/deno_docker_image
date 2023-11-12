@@ -16,11 +16,11 @@
                 "name": "install deno",
                 "uses": "denoland/setup-deno@v1"
             }, {
-                "name": "compare version",
-                "run": "deno run -A ./script/compare.ts"
+                "name": "install tools",
+                "run": "sudo apt install -y curl yq"
             }, {
-                "name": "push tag",
-                "run": "git tag -a ${v_origin} -m 'sync latest denoland/deno' && git push origin ${v_origin}"
+                "name": "compare version",
+                "run": "./script/sync.sh"
             }]
         }
     }
