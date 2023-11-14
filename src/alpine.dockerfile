@@ -21,7 +21,7 @@ COPY --from=cc /tmp/nsswitch.conf /etc/
 COPY --from=cc /tmp/cc.conf /etc/ld.so.conf.d/
 COPY --from=cc /tmp/cc /lib/
 COPY --from=cc /tmp/gconv /usr/lib/cc/
-RUN mkdir /lib64 && ln -s /lib/cc/ld-linux-$(arch).so.2 /lib64/
+RUN mkdir /lib64 && ln -s /lib/cc/ld-linux-*.so.2 /lib64/
 
 USER nobody
 ENTRYPOINT ["/usr/local/bin/deno"]
