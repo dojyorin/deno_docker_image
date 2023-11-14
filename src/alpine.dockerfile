@@ -1,3 +1,5 @@
+FROM busybox:latest AS busybox
+
 FROM alpine:latest AS deno
 
 ARG DENO_VERSION="v1.38.0"
@@ -7,11 +9,14 @@ RUN curl -Ls https://github.com/denoland/deno/releases/download/${DENO_VERSION}/
 
 FROM gcr.io/distroless/cc-debian12:latest AS cc
 
-RUN cp -rf /lib/$(arch)-linux-gnu /tmp/cc
-RUN cp -rf /usr/lib/$(arch)-linux-gnu/gconv /tmp/gconv
-RUN cp -f /etc/nsswitch.conf /tmp/
-RUN cp -f /etc/ld.so.conf.d/$(arch)-linux-gnu.conf /tmp/cc.conf
-RUN sed -r -i -e "s/$(arch)-linux-gnu/cc/g" /tmp/cc.conf
+COPY --from=busybox --chown=root:root --chmod=755 /bin/busybox /
+SHELL ["/busybox", "sh", "-c"]
+
+RUN /busybox cp -rf /lib/$(/busybox arch)-linux-gnu /tmp/cc
+RUN /busybox cp -rf /usr/lib/$(/busybox arch)-linux-gnu/gconv /tmp/gconv
+RUN /busybox cp -f /etc/nsswitch.conf /tmp/
+RUN /busybox cp -f /etc/ld.so.conf.d/$(/busybox arch)-linux-gnu.conf /tmp/cc.conf
+RUN /busybox sed -r -i -e "s/$(/busybox arch)-linux-gnu/cc/g" /tmp/cc.conf
 
 FROM alpine:latest
 
