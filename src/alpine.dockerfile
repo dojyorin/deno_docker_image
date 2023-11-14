@@ -11,7 +11,7 @@ RUN cp -rf /lib/$(arch)-linux-gnu /tmp/cc
 RUN cp -rf /usr/lib/$(arch)-linux-gnu/gconv /tmp/gconv
 RUN cp -f /etc/nsswitch.conf /tmp/
 RUN cp -f /etc/ld.so.conf.d/$(arch)-linux-gnu.conf /tmp/cc.conf
-RUN sed -r -i -e "s/$(arch)/cc/" /tmp/cc.conf
+RUN sed -r -i -e "s/$(arch)/cc/g" /tmp/cc.conf
 
 FROM alpine:latest
 
