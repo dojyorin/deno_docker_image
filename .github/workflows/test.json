@@ -22,8 +22,17 @@
     },
     "jobs": {
         "test": {
-            "name": "test: ubuntu-latest",
+            "name": "test: ${{matrix.file}}",
             "runs-on": "ubuntu-latest",
+            "strategy": {
+                "fail-fast": true,
+                "matrix": {
+                    "file": [
+                        "alpine",
+                        "distroless"
+                    ]
+                }
+            },
             "steps": [{
                 "name": "clone repository",
                 "uses": "actions/checkout@v3"

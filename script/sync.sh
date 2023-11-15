@@ -3,8 +3,13 @@ function gh_tag {
 }
 
 readonly origin='denoland/deno'
-readonly v_origin=$(gh_tag "${origin}")
-readonly v_local=$(gh_tag "${GITHUB_REPOSITORY}")
+
+readonly v_origin=$(gh_tag ${origin})
+readonly v_local=$(gh_tag ${GITHUB_REPOSITORY})
+
+if [[ ${v_local} == ${v_origin} ]]; then
+    exit
+fi
 
 git tag -a ${v_origin} -m "sync latest ${origin}"
 git push origin ${v_origin}
