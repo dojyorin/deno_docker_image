@@ -11,4 +11,3 @@ COPY --from=deno --chown=root:root --chmod=755 /tmp/deno /bin/
 
 USER nonroot
 ENTRYPOINT ["/bin/deno"]
-CMD ["repl"]

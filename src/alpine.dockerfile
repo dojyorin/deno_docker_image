@@ -19,4 +19,3 @@ RUN mkdir /lib64 && \
 
 USER nobody
 ENTRYPOINT ["/usr/local/bin/deno"]
-CMD ["repl"]
