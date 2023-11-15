@@ -11,4 +11,4 @@ COPY --from=deno --chown=root:root --chmod=755 /tmp/deno /bin/
 
 USER nonroot
 ENTRYPOINT ["/bin/deno"]
-CMD ["eval", "console.log('Welcome to Deno!');"]
+CMD ["repl"]

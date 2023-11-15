@@ -30,4 +30,4 @@ RUN mkdir /lib64 && ln -s /lib/cc/ld-linux-*.so.2 /lib64/
 
 USER nobody
 ENTRYPOINT ["/usr/local/bin/deno"]
-CMD ["eval", "console.log('Welcome to Deno!');"]
+CMD ["repl"]
