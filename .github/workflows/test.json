@@ -60,7 +60,7 @@
                 }
             }, {
                 "name": "run test",
-                "run": "docker run -it --init --rm ${{github.repository_owner}}/deno:latest eval -p 'new Date()'"
+                "run": "docker run -it --init --rm ${{env.tag_l}} eval -p 'new Date()'"
             }]
         }
     }
