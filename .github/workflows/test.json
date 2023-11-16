@@ -50,7 +50,7 @@
                 "uses": "docker/setup-buildx-action@v3"
             }, {
                 "name": "test build",
-                "run": "docker buildx build --compress --no-cache --force-rm -f ./distroless.dockerfile --platforms linux/amd64 -t ${{env.tag_d}} ./src"
+                "run": "docker buildx build --compress --no-cache --force-rm -f ./distroless.dockerfile --platform linux/amd64 -t ${{env.tag_d}} ./src"
             }, {
                 "name": "list image",
                 "run": "docker image list"
