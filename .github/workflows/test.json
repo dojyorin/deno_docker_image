@@ -49,15 +49,8 @@
                 "name": "install docker-buildx",
                 "uses": "docker/setup-buildx-action@v3"
             }, {
-                "name": "build image",
-                "uses": "docker/build-push-action@v5",
-                "with": {
-                    "no-cache": true,
-                    "tags": "${{env.tag_f}},${{env.tag_d}}${{matrix.file == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || '' }}",
-                    "platforms": "linux/amd64",
-                    "context": "{{defaultContext}}:./src",
-                    "file": "${{matrix.file}}.dockerfile"
-                }
+                "name": "test build",
+                "run": "docker buildx build --compress --no-cache --force-rm -f ./distroless.dockerfile --platforms linux/amd64 -t ${{tag_d}} ./src"
             }, {
                 "name": "list image",
                 "run": "docker image list"
