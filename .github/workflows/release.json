@@ -18,6 +18,12 @@
                     ]
                 }
             },
+            "env": {
+                "tag_f": "${{github.repository_owner}}/deno:${{matrix.file}}-${{github.ref_name}}",
+                "tag_d": "${{github.repository_owner}}/deno:${{matrix.file}}",
+                "tag_v": "${{github.repository_owner}}/deno:${{github.ref_name}}",
+                "tag_l": "${{github.repository_owner}}/deno:latest"
+            },
             "steps": [{
                 "name": "clone repository",
                 "uses": "actions/checkout@v3"
@@ -40,14 +46,10 @@
                 "with": {
                     "push": true,
                     "no-cache": true,
-                    "tags": "${{env.common}},${{matrix.file == 'distroless' && env.latest || '' }}",
+                    "tags": "${{env.tag_f}},${{env.tag_d}}${{matrix.file == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || '' }}",
                     "platforms": "linux/amd64",
                     "context": "./src",
                     "file": "${{matrix.file}}.dockerfile"
-                },
-                "env": {
-                    "common": "${{github.repository_owner}}/deno:${{matrix.file}},${{github.repository_owner}}/deno:${{matrix.file}}-${{github.ref_name}}",
-                    "latest": "${{github.repository_owner}}/deno:latest,${{github.repository_owner}}/deno:${{github.ref_name}}"
                 }
             }]
         },
