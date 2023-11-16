@@ -12,4 +12,4 @@ jobs:
             - name: install tools
               run: sudo apt install -y curl yq
             - name: compare version
-              run: ./script/sync.sh
+              run: sh ./script/sync.sh
