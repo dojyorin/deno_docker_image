@@ -40,7 +40,7 @@ jobs:
                 no-cache: true
                 tags: ${{env.tag_f}},${{env.tag_d}}${{matrix.file == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || '' }}
                 platforms: linux/amd64
-                context: ./src
+                context: '{{defaultContext}}:./src'
                 file: ${{matrix.file}}.dockerfile
             - name: run test
               run: docker run -it --init --rm ${{env.tag_l}} eval -p 'new Date()'
