@@ -42,5 +42,7 @@ jobs:
                 platforms: linux/amd64
                 context: '{{defaultContext}}:./src'
                 file: ${{matrix.file}}.dockerfile
+            - name: list image
+              run: docker image list
             - name: run test
-              run: docker run --init --rm deno:${{matrix.file}} eval -p 'new Date()'
+              run: docker run --init --rm ${{env.tag_d}} eval -p 'new Date()'
