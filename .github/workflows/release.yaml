@@ -1,0 +1,49 @@
+name: release
+on:
+    push:
+        tags: v[0-9]+.[0-9]+.[0-9]+
+jobs:
+    build:
+        name: 'build: ${{matrix.file}}'
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: true
+            matrix:
+                file:
+                    - alpine
+                    - distroless
+        env:
+            tag_f: ${{github.repository_owner}}/deno:${{matrix.file}}-${{github.ref_name}}
+            tag_d: ${{github.repository_owner}}/deno:${{matrix.file}}
+            tag_v: ${{github.repository_owner}}/deno:${{github.ref_name}}
+            tag_l: ${{github.repository_owner}}/deno:latest
+        steps:
+            - name: clone repository
+              uses: actions/checkout@v3
+            - name: install docker-qemu
+              uses: docker/setup-qemu-action@v3
+            - name: install docker-buildx
+              uses: docker/setup-buildx-action@v3
+            - name: login dockerhub
+              uses: docker/login-action@v3
+              with:
+                username: ${{github.repository_owner}}
+                password: ${{secrets.DOCKERHUB_KEY}}
+            - name: build image
+              uses: docker/build-push-action@v5
+              with:
+                push: true
+                no-cache: true
+                tags: ${{env.tag_f}},${{env.tag_d}}${{matrix.file == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || '' }}
+                platforms: linux/amd64
+                context: ./src
+                file: ${{matrix.file}}.dockerfile
+    release:
+        name: 'release: ${{github.ref_name}}'
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: dispatch release
+              uses: softprops/action-gh-release@v1
+              with:
+                generate_release_notes: true
