@@ -39,9 +39,15 @@
                 "uses": "docker/build-push-action@v5",
                 "with": {
                     "push": true,
-                    "tags": "deno/${{matrix.file}}:latest",
+                    "no-cache": true,
+                    "tags": "${{env.common}},${{matrix.file == 'distroless' && env.latest || '' }}",
+                    "platforms": "linux/amd64",
                     "context": "./src",
                     "file": "${{matrix.file}}.dockerfile"
+                },
+                "env": {
+                    "common": "${{github.repository_owner}}/deno:${{matrix.file}},${{github.repository_owner}}/deno:${{matrix.file}}-${{github.ref_name}}",
+                    "latest": "${{github.repository_owner}}/deno:latest,${{github.repository_owner}}/deno:${{github.ref_name}}"
                 }
             }]
         },
