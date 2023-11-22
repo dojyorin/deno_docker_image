@@ -7,20 +7,20 @@
     },
     "jobs": {
         "build": {
-            "name": "build: ${{matrix.file}}",
+            "name": "build: ${{matrix.distro}}",
             "runs-on": "ubuntu-latest",
             "strategy": {
                 "fail-fast": true,
                 "matrix": {
-                    "file": [
+                    "distro": [
                         "alpine",
                         "distroless"
                     ]
                 }
             },
             "env": {
-                "tag_f": "${{github.repository_owner}}/deno:${{matrix.file}}-${{github.ref_name}}",
-                "tag_d": "${{github.repository_owner}}/deno:${{matrix.file}}",
+                "tag_f": "${{github.repository_owner}}/deno:${{matrix.distro}}-${{github.ref_name}}",
+                "tag_d": "${{github.repository_owner}}/deno:${{matrix.distro}}",
                 "tag_v": "${{github.repository_owner}}/deno:${{github.ref_name}}",
                 "tag_l": "${{github.repository_owner}}/deno:latest"
             },
@@ -46,10 +46,10 @@
                 "with": {
                     "push": true,
                     "no-cache": true,
-                    "tags": "${{env.tag_f}},${{env.tag_d}}${{matrix.file == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || '' }}",
+                    "tags": "${{env.tag_f}},${{env.tag_d}}${{matrix.distro == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || '' }}",
                     "platforms": "linux/amd64",
                     "context": "{{defaultContext}}:./src",
-                    "file": "${{matrix.file}}.dockerfile"
+                    "file": "${{matrix.distro}}.dockerfile"
                 }
             }]
         },
