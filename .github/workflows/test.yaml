@@ -17,8 +17,10 @@ jobs:
         name: 'fetch: deno latest version'
         runs-on: ubuntu-latest
         steps:
-            - name: set deno latest version to env
-              run: echo DENO_VERSION=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.env}}
+            - name: set deno latest version to output
+              run: echo DENO_VERSION=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.output}}
+            - name: set deno latest version to output
+              run: echo ${{jobs.fetch.outputs.DENO_VERSION}}
     test:
         name: 'test: ${{matrix.distro}}'
         runs-on: ubuntu-latest
@@ -45,6 +47,6 @@ jobs:
                 platforms: linux/amd64
                 context: '{{defaultContext}}:./src'
                 file: ${{matrix.distro}}.dockerfile
-                build-args: DENO_VERSION=${{env.DENO_VERSION}}
+                build-args: DENO_VERSION=${{jobs.fetch.outputs.DENO_VERSION}}
             - name: test image
               run: docker run --init --rm ${{env.tag_l}} eval -p 'new Date()'

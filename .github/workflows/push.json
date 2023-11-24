@@ -10,11 +10,11 @@
             "name": "fetch: deno latest version",
             "runs-on": "ubuntu-latest",
             "steps": [{
-                "name": "set deno latest version to env",
-                "run": "echo DENO_VERSION=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.env}}"
+                "name": "set deno latest version to output",
+                "run": "echo DENO_VERSION=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.output}}"
             }, {
                 "name": "compare dockerhub tag and deno latest version",
-                "run": "curl -Ls https://registry.hub.docker.com/v2/repositories/denoland/deno/tags?page_size=100 | yq '\"v\" + .results[].name' | grep -q ${{env.DENO_VERSION}}"
+                "run": "curl -Ls https://registry.hub.docker.com/v2/repositories/denoland/deno/tags?page_size=100 | yq '\"v\" + .results[].name' | grep -q ${{jobs.fetch.outputs.DENO_VERSION}}"
             }]
         },
         "build": {
@@ -32,9 +32,9 @@
                 }
             },
             "env": {
-                "tag_f": "${{github.repository_owner}}/deno:${{matrix.distro}}-${{env.DENO_VERSION}}",
+                "tag_f": "${{github.repository_owner}}/deno:${{matrix.distro}}-${{jobs.fetch.outputs.DENO_VERSION}}",
                 "tag_d": "${{github.repository_owner}}/deno:${{matrix.distro}}",
-                "tag_v": "${{github.repository_owner}}/deno:${{env.DENO_VERSION}}",
+                "tag_v": "${{github.repository_owner}}/deno:${{jobs.fetch.outputs.DENO_VERSION}}",
                 "tag_l": "${{github.repository_owner}}/deno:latest"
             },
             "steps": [{
@@ -61,7 +61,7 @@
                     "platforms": "linux/amd64",
                     "context": "{{defaultContext}}:./src",
                     "file": "${{matrix.distro}}.dockerfile",
-                    "build-args": "DENO_VERSION=${{env.DENO_VERSION}}"
+                    "build-args": "DENO_VERSION=${{jobs.fetch.outputs.DENO_VERSION}}"
                 }
             }]
         }
