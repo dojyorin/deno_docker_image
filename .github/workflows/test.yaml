@@ -46,4 +46,4 @@ jobs:
               with:
                 image: ${{env.tag_l}}
                 shell: /usr/local/bin/deno
-                run: eval -p 'new Date()'
+                run: "\b\b\b\b \"eval -p 'new Date()'"

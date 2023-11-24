@@ -63,7 +63,7 @@
                 "with": {
                     "image": "${{env.tag_l}}",
                     "shell": "/usr/local/bin/deno",
-                    "run": "eval -p 'new Date()'"
+                    "run": "\u0008\u0008\u0008\u0008 \"eval -p 'new Date()'"
                 }
             }]
         }
