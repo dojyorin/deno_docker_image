@@ -41,9 +41,11 @@ jobs:
                 context: '{{defaultContext}}:./src'
                 file: ${{matrix.distro}}.dockerfile
                 build-args: DENO_VERSION=${{env.DENO_VERSION}}
+            - name: debug
+              run: docker image ls
             - name: test image
               uses: addnab/docker-run-action@v3
               with:
                 image: ${{env.tag_l}}
                 shell: /usr/local/bin/deno
-                run: "\b\b\b\b \"eval -p 'new Date()'"
+                run: eval -p 'new Date()'
