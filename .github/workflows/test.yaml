@@ -43,9 +43,3 @@ jobs:
                 build-args: DENO_VERSION=${{env.DENO_VERSION}}
             - name: test image
               run: docker run --init --rm ${{env.tag_l}} eval -p 'new Date()'
-            - name: test image
-              uses: addnab/docker-run-action@v3
-              with:
-                image: ${{env.tag_l}}
-                shell: /usr/local/bin/deno
-                run: eval -p 'new Date()'
