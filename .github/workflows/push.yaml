@@ -7,13 +7,13 @@ jobs:
         name: 'fetch: deno latest version'
         runs-on: ubuntu-latest
         outputs:
-            DENO_VERSION: ${{steps.DENO_VERSION.outputs.DENO_VERSION}}
+            DENO_VERSION: ${{steps.DENO_VERSION.outputs.value}}
         steps:
             - id: DENO_VERSION
               name: get deno latest version
-              run: echo DENO_VERSION=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.output}}
+              run: echo value=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.output}}
             - name: compare dockerhub tag and deno latest version
-              run: curl -Ls https://registry.hub.docker.com/v2/repositories/denoland/deno/tags?page_size=100 | yq '"v" + .results[].name' | grep -q ${{steps.DENO_VERSION.outputs.DENO_VERSION}}
+              run: curl -Ls https://registry.hub.docker.com/v2/repositories/denoland/deno/tags?page_size=100 | yq '"v" + .results[].name' | grep -q ${{steps.DENO_VERSION.outputs.value}}
     build:
         name: 'build: ${{matrix.distro}}'
         runs-on: ubuntu-latest
