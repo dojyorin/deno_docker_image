@@ -1,6 +1,6 @@
 FROM alpine:latest AS deno
 
-ARG DENO_VERSION="v1.38.1"
+ARG DENO_VERSION
 
 RUN apk --update --no-cache add curl
 RUN curl -Ls https://github.com/denoland/deno/releases/download/${DENO_VERSION}/deno-$(arch)-unknown-linux-gnu.zip | unzip -q -d /tmp -

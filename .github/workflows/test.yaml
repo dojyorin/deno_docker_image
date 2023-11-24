@@ -14,18 +14,15 @@ on:
             - '**.md'
 jobs:
     test:
-        name: 'test: ${{matrix.file}}'
+        name: 'test: ${{matrix.distro}}'
         runs-on: ubuntu-latest
         strategy:
             fail-fast: true
             matrix:
-                file:
+                distro:
                     - alpine
                     - distroless
         env:
-            tag_f: ${{github.repository_owner}}/deno:${{matrix.file}}-${{github.ref_name}}
-            tag_d: ${{github.repository_owner}}/deno:${{matrix.file}}
-            tag_v: ${{github.repository_owner}}/deno:${{github.ref_name}}
             tag_l: ${{github.repository_owner}}/deno:latest
         steps:
             - name: clone repository
@@ -34,14 +31,19 @@ jobs:
               uses: docker/setup-qemu-action@v3
             - name: install docker-buildx
               uses: docker/setup-buildx-action@v3
+            - name: install tools
+              run: sudo apt install -y curl yq
             - name: build image
               uses: docker/build-push-action@v5
               with:
-                tags: ${{env.tag_f}},${{env.tag_d}}${{matrix.file == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || '' }}
+                no-cache: true
+                tags: ${{env.tag_l}}
                 platforms: linux/amd64
                 context: '{{defaultContext}}:./src'
-                file: ${{matrix.file}}.dockerfile
-            - name: list image
-              run: docker image list
-            - name: run test
-              run: docker run --init --rm ${{env.tag_d}} eval -p 'new Date()'
+                file: ${{matrix.distro}}.dockerfile
+                build-args: DENO_VERSION=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name')
+            - name: test image
+              uses: addnab/docker-run-action@v3
+              with:
+                image: ${{env.tag_l}}
+                run: eval -p 'new Date()'

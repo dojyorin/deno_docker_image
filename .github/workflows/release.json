@@ -49,7 +49,8 @@
                     "tags": "${{env.tag_f}},${{env.tag_d}}${{matrix.distro == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || '' }}",
                     "platforms": "linux/amd64",
                     "context": "{{defaultContext}}:./src",
-                    "file": "${{matrix.distro}}.dockerfile"
+                    "file": "${{matrix.distro}}.dockerfile",
+                    "build-args": "DENO_VERSION=${{github.ref_name}}"
                 }
             }]
         },

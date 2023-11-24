@@ -34,9 +34,6 @@
                 }
             },
             "env": {
-                "tag_f": "${{github.repository_owner}}/deno:${{matrix.distro}}-${{github.ref_name}}",
-                "tag_d": "${{github.repository_owner}}/deno:${{matrix.distro}}",
-                "tag_v": "${{github.repository_owner}}/deno:${{github.ref_name}}",
                 "tag_l": "${{github.repository_owner}}/deno:latest"
             },
             "steps": [{
@@ -49,13 +46,18 @@
                 "name": "install docker-buildx",
                 "uses": "docker/setup-buildx-action@v3"
             }, {
+                "name": "install tools",
+                "run": "sudo apt install -y curl yq"
+            }, {
                 "name": "build image",
                 "uses": "docker/build-push-action@v5",
                 "with": {
-                    "tags": "${{env.tag_f}},${{env.tag_d}}${{matrix.distro == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || '' }}",
+                    "no-cache": true,
+                    "tags": "${{env.tag_l}}",
                     "platforms": "linux/amd64",
                     "context": "{{defaultContext}}:./src",
-                    "file": "${{matrix.distro}}.dockerfile"
+                    "file": "${{matrix.distro}}.dockerfile",
+                    "build-args": "DENO_VERSION=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name')"
                 }
             }, {
                 "name": "test image",
