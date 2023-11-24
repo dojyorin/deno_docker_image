@@ -43,6 +43,9 @@
                 "name": "install docker-qemu",
                 "uses": "docker/setup-qemu-action@v3"
             }, {
+                "name": "get original deno version",
+                "run": "echo DENO_VERSION=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.env}}"
+            }, {
                 "name": "build image",
                 "uses": "docker/build-push-action@v5",
                 "with": {
@@ -51,7 +54,7 @@
                     "platforms": "linux/amd64",
                     "context": "{{defaultContext}}:./src",
                     "file": "${{matrix.distro}}.dockerfile",
-                    "build-args": "DENO_VERSION=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name')"
+                    "build-args": "DENO_VERSION=${{env.DENO_VERSION}}"
                 }
             }, {
                 "name": "test image",
