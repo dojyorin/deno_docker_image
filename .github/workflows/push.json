@@ -12,9 +12,6 @@
             "steps": [{
                 "name": "set deno latest version to output",
                 "run": "echo DENO_VERSION=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.output}}"
-            }, {
-                "name": "compare dockerhub tag and deno latest version",
-                "run": "curl -Ls https://registry.hub.docker.com/v2/repositories/denoland/deno/tags?page_size=100 | yq '\"v\" + .results[].name' | grep -q ${{jobs.fetch.outputs.DENO_VERSION}}"
             }]
         },
         "build": {
@@ -32,12 +29,15 @@
                 }
             },
             "env": {
-                "tag_f": "${{github.repository_owner}}/deno:${{matrix.distro}}-${{jobs.fetch.outputs.DENO_VERSION}}",
+                "tag_f": "${{github.repository_owner}}/deno:${{matrix.distro}}-${{needs.fetch.outputs.DENO_VERSION}}",
                 "tag_d": "${{github.repository_owner}}/deno:${{matrix.distro}}",
-                "tag_v": "${{github.repository_owner}}/deno:${{jobs.fetch.outputs.DENO_VERSION}}",
+                "tag_v": "${{github.repository_owner}}/deno:${{needs.fetch.outputs.DENO_VERSION}}",
                 "tag_l": "${{github.repository_owner}}/deno:latest"
             },
             "steps": [{
+                "name": "compare dockerhub tag and deno latest version",
+                "run": "curl -Ls https://registry.hub.docker.com/v2/repositories/denoland/deno/tags?page_size=100 | yq '\"v\" + .results[].name' | grep -q ${{needs.fetch.outputs.DENO_VERSION}}"
+            }, {
                 "name": "clone repository",
                 "uses": "actions/checkout@v3"
             }, {
@@ -61,7 +61,7 @@
                     "platforms": "linux/amd64",
                     "context": "{{defaultContext}}:./src",
                     "file": "${{matrix.distro}}.dockerfile",
-                    "build-args": "DENO_VERSION=${{jobs.fetch.outputs.DENO_VERSION}}"
+                    "build-args": "DENO_VERSION=${{needs.fetch.outputs.DENO_VERSION}}"
                 }
             }]
         }
