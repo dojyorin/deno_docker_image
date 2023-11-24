@@ -9,7 +9,5 @@ jobs:
         steps:
             - name: clone repository
               uses: actions/checkout@v3
-            - name: install tools
-              run: sudo apt install -y curl yq
             - name: compare version
               run: sh ./script/sync.sh
