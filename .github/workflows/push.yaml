@@ -1,11 +1,21 @@
-name: release
+name: push
 on:
-    push:
-        tags: v[0-9]+.[0-9]+.[0-9]+
+    schedule:
+        - cron: 0 12 * * *
 jobs:
+    fetch:
+        name: 'fetch: deno latest version'
+        runs-on: ubuntu-latest
+        steps:
+            - name: set deno latest version to env
+              run: echo DENO_VERSION=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.env}}
+            - name: compare dockerhub tag and deno latest version
+              run: curl -Ls https://registry.hub.docker.com/v2/repositories/denoland/deno/tags?page_size=100 | yq '"v" + .results[].name' | grep -q ${{env.DENO_VERSION}}
     build:
         name: 'build: ${{matrix.distro}}'
         runs-on: ubuntu-latest
+        needs: fetch
+        if: ${{failure()}}
         strategy:
             fail-fast: true
             matrix:
@@ -13,9 +23,9 @@ jobs:
                     - alpine
                     - distroless
         env:
-            tag_f: ${{github.repository_owner}}/deno:${{matrix.distro}}-${{github.ref_name}}
+            tag_f: ${{github.repository_owner}}/deno:${{matrix.distro}}-${{env.DENO_VERSION}}
             tag_d: ${{github.repository_owner}}/deno:${{matrix.distro}}
-            tag_v: ${{github.repository_owner}}/deno:${{github.ref_name}}
+            tag_v: ${{github.repository_owner}}/deno:${{env.DENO_VERSION}}
             tag_l: ${{github.repository_owner}}/deno:latest
         steps:
             - name: clone repository
@@ -31,18 +41,10 @@ jobs:
               uses: docker/build-push-action@v5
               with:
                 push: true
+                pull: true
                 no-cache: true
-                tags: ${{env.tag_f}},${{env.tag_d}}${{matrix.distro == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || '' }}
+                tags: ${{env.tag_f}},${{env.tag_d}}${{matrix.distro == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || ''}}
                 platforms: linux/amd64
                 context: '{{defaultContext}}:./src'
                 file: ${{matrix.distro}}.dockerfile
-                build-args: DENO_VERSION=${{github.ref_name}}
-    release:
-        name: 'release: ${{github.ref_name}}'
-        runs-on: ubuntu-latest
-        needs: build
-        steps:
-            - name: dispatch release
-              uses: softprops/action-gh-release@v1
-              with:
-                generate_release_notes: true
+                build-args: DENO_VERSION=${{env.DENO_VERSION}}
