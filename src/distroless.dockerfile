@@ -7,7 +7,7 @@ RUN curl -Ls https://github.com/denoland/deno/releases/download/${DENO_VERSION}/
 
 FROM gcr.io/distroless/cc-debian12:latest
 
-COPY --from=deno --chown=root:root --chmod=755 /tmp/deno /bin/
+COPY --from=deno --chown=root:root --chmod=755 /tmp/deno /usr/local/bin/
 
 USER nonroot
-ENTRYPOINT ["/bin/deno"]
+ENTRYPOINT ["/usr/local/bin/deno"]

@@ -34,6 +34,7 @@ jobs:
             - name: build image
               uses: docker/build-push-action@v5
               with:
+                pull: true
                 no-cache: true
                 tags: ${{env.tag_l}}
                 platforms: linux/amd64
@@ -44,4 +45,5 @@ jobs:
               uses: addnab/docker-run-action@v3
               with:
                 image: ${{env.tag_l}}
+                shell: /usr/local/bin/deno
                 run: eval -p 'new Date()'
