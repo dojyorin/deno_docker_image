@@ -1,6 +1,6 @@
 FROM alpine:latest AS deno
 
-ARG DENO_VERSION="v1.38.0"
+ARG DENO_VERSION
 
 RUN apk --update --no-cache add curl
 RUN curl -Ls https://github.com/denoland/deno/releases/download/${DENO_VERSION}/deno-$(arch)-unknown-linux-gnu.zip | unzip -q -d /tmp -
@@ -9,13 +9,15 @@ FROM gcr.io/distroless/cc-debian12:latest AS cc
 
 FROM alpine:latest
 
+ENV LD_LIBRARY_PATH="/usr/local/lib"
+
 COPY --from=deno --chown=root:root --chmod=755 /tmp/deno /usr/local/bin/
-COPY --from=cc /lib/x86_64-linux-gnu/* /lib/x86_64-linux-gnu/
-COPY --from=cc /etc/nsswitch.conf /etc/
-COPY --from=cc /etc/ld.so.conf.d/x86_64-linux-gnu.conf /etc/ld.so.conf.d/
-COPY --from=cc /usr/lib/x86_64-linux-gnu/gconv/* /usr/lib/x86_64-linux-gnu/gconv/
-RUN mkdir /lib64 && ln -s /lib/x86_64-linux-gnu/ld-linux-x86-64.so.2 /lib64/
+COPY --from=cc --chown=root:root --chmod=755 /lib/*-linux-gnu/* /usr/local/lib/
+
+RUN mkdir /lib64 && \
+    ln -s /usr/local/lib/ld-linux-*.so.2 /lib64/ && \
+    sed -i -e 's|nobody:/|nobody:/home/nobody|' /etc/passwd && \
+    install -d -o nobody -g nobody -m 700 /home/nobody
 
 USER nobody
 ENTRYPOINT ["/usr/local/bin/deno"]
-CMD ["eval", "console.log('Welcome to Deno!');"]

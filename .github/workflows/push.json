@@ -1,24 +1,9 @@
 {
-    "name": "test",
+    "name": "push",
     "on": {
-        "push": {
-            "branches-ignore": [
-                "master"
-            ],
-            "paths-ignore": [
-                ".git*",
-                "**.md"
-            ]
-        },
-        "pull_request": {
-            "branches": [
-                "master"
-            ],
-            "paths-ignore": [
-                ".git*",
-                "**.md"
-            ]
-        }
+        "schedule": [{
+            "cron": "0 12 * * *"
+        }]
     },
     "jobs": {
         "fetch": {
@@ -31,12 +16,16 @@
                 "id": "DENO_VERSION",
                 "name": "get deno latest version",
                 "run": "echo value=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.output}}"
+            }, {
+                "name": "compare dockerhub tag and deno latest version",
+                "run": "curl -Ls https://registry.hub.docker.com/v2/repositories/denoland/deno/tags?page_size=100 | yq '\"v\" + .results[].name' | grep -q ${{steps.DENO_VERSION.outputs.value}}"
             }]
         },
-        "test": {
-            "name": "test: ${{matrix.distro}}",
+        "build": {
+            "name": "build: ${{matrix.distro}}",
             "runs-on": "ubuntu-latest",
             "needs": "fetch",
+            "if": "${{failure()}}",
             "strategy": {
                 "fail-fast": true,
                 "matrix": {
@@ -47,6 +36,9 @@
                 }
             },
             "env": {
+                "tag_f": "${{github.repository_owner}}/deno:${{matrix.distro}}-${{needs.fetch.outputs.DENO_VERSION}}",
+                "tag_d": "${{github.repository_owner}}/deno:${{matrix.distro}}",
+                "tag_v": "${{github.repository_owner}}/deno:${{needs.fetch.outputs.DENO_VERSION}}",
                 "tag_l": "${{github.repository_owner}}/deno:latest"
             },
             "steps": [{
@@ -56,20 +48,25 @@
                 "name": "install docker-qemu",
                 "uses": "docker/setup-qemu-action@v3"
             }, {
+                "name": "login dockerhub",
+                "uses": "docker/login-action@v3",
+                "with": {
+                    "username": "${{github.repository_owner}}",
+                    "password": "${{secrets.DOCKERHUB_KEY}}"
+                }
+            }, {
                 "name": "build image",
                 "uses": "docker/build-push-action@v5",
                 "with": {
+                    "push": true,
                     "pull": true,
                     "no-cache": true,
-                    "tags": "${{env.tag_l}}",
+                    "tags": "${{env.tag_f}},${{env.tag_d}}${{matrix.distro == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || ''}}",
                     "platforms": "linux/amd64",
                     "context": "{{defaultContext}}:./src",
                     "file": "${{matrix.distro}}.dockerfile",
                     "build-args": "DENO_VERSION=${{needs.fetch.outputs.DENO_VERSION}}"
                 }
-            }, {
-                "name": "test image",
-                "run": "docker run --init --rm ${{env.tag_l}} eval -p 'new Date()'"
             }]
         }
     }
