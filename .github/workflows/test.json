@@ -58,8 +58,8 @@
                     "build-args": "DENO_VERSION=${{env.DENO_VERSION}}"
                 }
             }, {
-                "name": "debug",
-                "run": "docker image ls"
+                "name": "test image",
+                "run": "docker run -it --init --rm ${{env.tag_l}} eval -p 'new Date()'"
             }, {
                 "name": "test image",
                 "uses": "addnab/docker-run-action@v3",
