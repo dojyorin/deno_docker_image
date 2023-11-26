@@ -5,4 +5,4 @@
 ![shields:license](https://img.shields.io/github/license/dojyorin/deno_docker_image)
 ![shields:release](https://img.shields.io/github/release/dojyorin/deno_docker_image)
 
-Simple and small deno docker image.
+The simple and small deno docker image.
