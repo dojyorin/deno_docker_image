@@ -13,7 +13,7 @@ jobs:
               name: get deno latest version
               run: echo value=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.output}}
             - name: compare dockerhub tag and deno latest version
-              run: curl -Ls https://registry.hub.docker.com/v2/repositories/denoland/deno/tags?page_size=100 | yq '"v" + .results[].name' | grep -q ${{steps.DENO_VERSION.outputs.value}}
+              run: curl -Ls https://registry.hub.docker.com/v2/repositories/dojyorin/deno/tags?page_size=100 | yq '"v" + .results[].name' | grep -q ${{steps.DENO_VERSION.outputs.value}}
     build:
         name: 'build: ${{matrix.distro}}'
         runs-on: ubuntu-latest
@@ -26,10 +26,10 @@ jobs:
                     - alpine
                     - distroless
         env:
-            tag_f: ${{github.repository_owner}}/deno:${{matrix.distro}}-${{needs.fetch.outputs.DENO_VERSION}}
-            tag_d: ${{github.repository_owner}}/deno:${{matrix.distro}}
-            tag_v: ${{github.repository_owner}}/deno:${{needs.fetch.outputs.DENO_VERSION}}
-            tag_l: ${{github.repository_owner}}/deno:latest
+            tag_f: dojyorin/deno:${{matrix.distro}}-${{needs.fetch.outputs.DENO_VERSION}}
+            tag_d: dojyorin/deno:${{matrix.distro}}
+            tag_v: dojyorin/deno:${{needs.fetch.outputs.DENO_VERSION}}
+            tag_l: dojyorin/deno:latest
         steps:
             - name: clone repository
               uses: actions/checkout@v3
