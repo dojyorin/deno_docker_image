@@ -25,10 +25,10 @@
             "name": "fetch: deno latest version",
             "runs-on": "ubuntu-latest",
             "outputs": {
-                "DENO_VERSION": "${{steps.DENO_VERSION.outputs.value}}"
+                "deno_v": "${{steps.deno_v.outputs.value}}"
             },
             "steps": [{
-                "id": "DENO_VERSION",
+                "id": "deno_v",
                 "name": "get deno latest version",
                 "run": "echo value=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.output}}"
             }]
@@ -65,7 +65,7 @@
                     "platforms": "linux/amd64",
                     "context": "{{defaultContext}}:./src",
                     "file": "${{matrix.distro}}.dockerfile",
-                    "build-args": "DENO_VERSION=${{needs.fetch.outputs.DENO_VERSION}}"
+                    "build-args": "DENO_VERSION=${{needs.fetch.outputs.deno_v}}"
                 }
             }, {
                 "name": "test image",
