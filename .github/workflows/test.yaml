@@ -33,7 +33,7 @@ jobs:
                     - alpine
                     - distroless
         env:
-            tag_l: ${{github.repository_owner}}/deno:latest
+            tag_l: dojyorin/deno:latest
         steps:
             - name: clone repository
               uses: actions/checkout@v3
