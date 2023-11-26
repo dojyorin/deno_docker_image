@@ -13,28 +13,27 @@ This image is published on DockerHub and synchronized with latest version of [de
 - Alpine: [dojyorin/deno:alpine](https://hub.docker.com/r/dojyorin/deno/tags?name=alpine)
 
 # Usage
+Easy to introduce in your project.
 
 **⚠Notes**
-- When starting container be sure to add `--init` flag (`docker run`) or `init: true` property (`docker-compose.yml`) to avoid [PID 1 Problem](https://www.docker.com/blog/keep-nodejs-rockin-in-docker/#:~:text=PID%201%20Problem).
+- When starting container, be sure to add `--init` flag (`docker run`) or `init: true` property (`docker-compose.yml`) to avoid [PID 1 Problem](https://www.docker.com/blog/keep-nodejs-rockin-in-docker/#:~:text=PID%201%20Problem).
+- For security reasons, default runtime user is `nonroot` in distroless and `nobody` in other distributions.
 
-**Run single image**
-
+**As single image**
 ```sh
 # Run REPL.
 docker run -it --init --rm denoland/deno:latest
 
 # Run script.
-docker run --init --rm -v $(pwd):/project denoland/deno:latest run /project/main.ts
+docker run --init --rm -p 0.0.0.0:80:8080 -v /project:/project:ro denoland/deno:latest run /project/main.ts
 ```
 
-**Run compose**
-
+**As compose**
 ```yaml
 name: my_project
 services:
     image: dojyorin/deno:latest
     restart: always
-    user: nonroot
     init: true
     ports:
         - 0.0.0.0:80:8000
@@ -45,8 +44,7 @@ services:
         - /project/main.ts
 ```
 
-**Your base image**
-
+**As base image**
 ```dockerfile
 FROM dojyorin/deno:latest
 COPY /project/* /project/
