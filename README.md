@@ -6,3 +6,50 @@
 ![shields:release](https://img.shields.io/github/release/dojyorin/deno_docker_image)
 
 The simple and small deno docker image.
+
+This image is published on DockerHub and synchronized with latest version of [denoland/deno](https://github.com/denoland/deno) every day at `12:00` UTC.
+
+- Distroless: [dojyorin/deno:distroless](https://hub.docker.com/r/dojyorin/deno/tags?name=distroless) (default)
+- Alpine: [dojyorin/deno:alpine](https://hub.docker.com/r/dojyorin/deno/tags?name=alpine)
+
+# Usage
+
+**⚠Notes**
+- When starting container be sure to add `--init` flag (`docker run`) or `init: true` property (`docker-compose.yml`) to avoid [PID 1 Problem](https://www.docker.com/blog/keep-nodejs-rockin-in-docker/#:~:text=PID%201%20Problem).
+
+**Run single image**
+
+```sh
+# Run REPL.
+docker run -it --init --rm denoland/deno:latest
+
+# Run script.
+docker run --init --rm -v $(pwd):/project denoland/deno:latest run /project/main.ts
+```
+
+**Run compose**
+
+```yaml
+name: my_project
+services:
+    image: dojyorin/deno:latest
+    restart: always
+    user: nonroot
+    init: true
+    ports:
+        - 0.0.0.0:80:8000
+    volumes:
+        - /project:/project:ro
+    command:
+        - run
+        - /project/main.ts
+```
+
+**Your base image**
+
+```dockerfile
+FROM dojyorin/deno:latest
+COPY /project/* /project/
+EXPOSE 8000
+CMD ["run", "/project/main.ts"]
+```
