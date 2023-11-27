@@ -52,4 +52,15 @@ EXPOSE 8000
 CMD ["run", "/project/main.ts"]
 ```
 
-# Difference with [deno_docker](https://github.com/denoland/deno_docker)
+# Difference with official image
+
+This project was created to solve the problems faced by official images.
+
+- Duplicate [tini](https://github.com/krallin/tini)
+- Alpine dependent on third-party image
+- Deprecated Distroless tag
+
+- Use tini integrated with docker.
+- Clone glibc required by Alpine from Distroless.
+
+If official images solve those issues, this project will be unnecessary...
