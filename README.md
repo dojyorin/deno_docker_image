@@ -22,7 +22,7 @@ Easy to introduce in your project.
 **As single image**
 ```sh
 # Run REPL.
-docker run -it --init --rm denoland/deno:latest
+docker run --init --rm -it denoland/deno:latest
 
 # Run script.
 docker run --init --rm -p 0.0.0.0:80:8080 -v /project:/project:ro denoland/deno:latest run /project/main.ts
@@ -33,8 +33,8 @@ docker run --init --rm -p 0.0.0.0:80:8080 -v /project:/project:ro denoland/deno:
 name: my_project
 services:
     image: dojyorin/deno:latest
-    restart: always
     init: true
+    restart: always
     ports:
         - 0.0.0.0:80:8000
     volumes:
