@@ -12,10 +12,10 @@ This image is published on DockerHub and synchronized with latest version of [de
 - Distroless: [dojyorin/deno:distroless](https://hub.docker.com/r/dojyorin/deno/tags?name=distroless) (default)
 - Alpine: [dojyorin/deno:alpine](https://hub.docker.com/r/dojyorin/deno/tags?name=alpine)
 
-# Usage
+# How to use
 Easy to introduce in your project.
 
-**⚠Notes**
+**⚠ Notes ⚠**
 - When starting container, be sure to add `--init` flag (`docker run`) or `init: true` property (`docker-compose.yml`) to avoid [PID 1 Problem](https://www.docker.com/blog/keep-nodejs-rockin-in-docker/#:~:text=PID%201%20Problem).
 - For security reasons, default runtime user is `nonroot` in distroless and `nobody` in other distributions.
 
@@ -51,3 +51,5 @@ COPY /project/* /project/
 EXPOSE 8000
 CMD ["run", "/project/main.ts"]
 ```
+
+# Difference with [deno_docker](https://github.com/denoland/deno_docker)
