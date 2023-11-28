@@ -16,7 +16,7 @@ This image is published on DockerHub and synchronized with latest version of [de
 Easy to introduce in your project.
 
 **⚠ Notes ⚠**
-- When starting container, be sure to add `--init` flag (`docker run`) or `init: true` property (`docker-compose.yml`) to avoid [PID 1 Problem](https://www.docker.com/blog/keep-nodejs-rockin-in-docker/#:~:text=PID%201%20Problem).
+- When starting container, be sure to add `--init` flag (`docker run`) or `init: true` property (`docker-compose.yml`) to avoid [PID 1 Problem](https://www.docker.com/blog/keep-nodejs-rockin-in-docker#:~:text=PID%201%20Problem).
 - For security reasons, default runtime user is `nonroot` in distroless and `nobody` in other distributions.
 
 **As single image**
@@ -54,13 +54,10 @@ CMD ["run", "/project/main.ts"]
 
 # Difference with official image
 
-This project was created to solve the problems faced by official images.
+This project was created to solve the problems faced by [deno_docker](https://github.com/denoland/deno_docker) official images.
 
-- Duplicate [tini](https://github.com/krallin/tini)
+- [tini](https://github.com/krallin/tini) is redundant
 - Alpine dependent on third-party image
-- Deprecated Distroless tag
-
-- Use tini integrated with docker.
-- Clone glibc required by Alpine from Distroless.
+- Using old debian in Distroless (Uses 11, latest is 12)
 
 If official images solve those issues, this project will be unnecessary...

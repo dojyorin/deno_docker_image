@@ -13,6 +13,7 @@ ENV LD_LIBRARY_PATH="/usr/local/lib"
 
 COPY --from=deno --chown=root:root --chmod=755 /tmp/deno /usr/local/bin/
 COPY --from=cc --chown=root:root --chmod=755 /lib/*-linux-gnu/* /usr/local/lib/
+COPY --from=cc --chown=root:root --chmod=755 /lib64/* /lib64/
 
 USER nonroot
 ENTRYPOINT ["/usr/local/bin/deno"]
