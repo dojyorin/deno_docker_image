@@ -13,10 +13,7 @@ jobs:
               name: get deno latest version
               run: echo value=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.output}}
             - name: compare dockerhub tag and deno latest version
-              run: curl -Ls https://registry.hub.docker.com/v2/repositories/dojyorin/deno/tags?page_size=100 | yq '"v" + .results[].name' | grep -q ${{steps.deno_v.outputs.value}}
-            - if: ${{failure()}}
-              name: detect latest version - ${{steps.deno_v.outputs.value}}
-              run: "true"
+              run: '! curl -Ls https://registry.hub.docker.com/v2/repositories/dojyorin/deno/tags?page_size=100 | yq ''"v" + .results[].name'' | grep -q ${{steps.deno_v.outputs.value}}'
     build:
         name: 'build: ${{matrix.distro}}'
         runs-on: ubuntu-latest
