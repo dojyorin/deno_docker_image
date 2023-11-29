@@ -21,10 +21,10 @@
             }]
         },
         "fetch": {
-            "uses": "./.github/workflows/action_fetch.yaml"
+            "uses": "./.github/workflows/_fetch.yaml"
         },
         "test": {
-            "uses": "./.github/workflows/action_test.yaml",
+            "uses": "./.github/workflows/_test.yaml",
             "with": {
                 "deno_v": "${{needs.fetch.outputs.deno_v}}"
             },
@@ -33,7 +33,7 @@
             ]
         },
         "push": {
-            "uses": "./.github/workflows/action_build.yaml",
+            "uses": "./.github/workflows/_push.yaml",
             "with": {
                 "deno_v": "${{needs.fetch.outputs.deno_v}}"
             },

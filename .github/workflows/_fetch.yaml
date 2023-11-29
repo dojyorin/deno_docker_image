@@ -1,3 +1,4 @@
+name: _fetch
 on:
     workflow_call:
         outputs:
