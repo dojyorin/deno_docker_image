@@ -1,5 +1,4 @@
 {
-    "name": "action_build",
     "on": {
         "workflow_call": {
             "inputs": {
@@ -11,8 +10,8 @@
         }
     },
     "jobs": {
-        "build": {
-            "name": "build: ${{matrix.distro}}",
+        "push": {
+            "name": "push: ${{matrix.distro}}",
             "runs-on": "ubuntu-latest",
             "strategy": {
                 "fail-fast": true,
@@ -43,7 +42,7 @@
                     "password": "${{secrets.DOCKERHUB_KEY}}"
                 }
             }, {
-                "name": "build image",
+                "name": "build and push image",
                 "uses": "docker/build-push-action@v5",
                 "with": {
                     "push": true,

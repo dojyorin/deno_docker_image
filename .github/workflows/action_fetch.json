@@ -1,5 +1,4 @@
 {
-    "name": "action_fetch",
     "on": {
         "workflow_call": {
             "outputs": {
@@ -11,7 +10,7 @@
     },
     "jobs": {
         "fetch": {
-            "name": "fetch: deno latest version",
+            "name": "fetch",
             "runs-on": "ubuntu-latest",
             "outputs": {
                 "deno_v": "${{steps.deno_v.outputs.value}}"

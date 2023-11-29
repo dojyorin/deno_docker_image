@@ -1,23 +1,13 @@
-name: push
 on:
-    schedule:
-        - cron: 0 6 * * *
+    workflow_call:
+        inputs:
+            deno_v:
+                type: string
+                required: true
 jobs:
-    fetch:
-        name: 'fetch: deno latest version'
+    push:
+        name: 'push: ${{matrix.distro}}'
         runs-on: ubuntu-latest
-        outputs:
-            deno_v: ${{steps.deno_v.outputs.value}}
-        steps:
-            - id: deno_v
-              name: get deno latest version
-              run: echo value=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.output}}
-            - name: compare dockerhub tag and deno latest version
-              run: '! curl -Ls https://registry.hub.docker.com/v2/repositories/dojyorin/deno/tags?page_size=100 | yq ''"v" + .results[].name'' | grep -q ${{steps.deno_v.outputs.value}}'
-    build:
-        name: 'build: ${{matrix.distro}}'
-        runs-on: ubuntu-latest
-        needs: fetch
         strategy:
             fail-fast: true
             matrix:
@@ -25,9 +15,9 @@ jobs:
                     - alpine
                     - distroless
         env:
-            tag_f: dojyorin/deno:${{matrix.distro}}-${{needs.fetch.outputs.deno_v}}
+            tag_f: dojyorin/deno:${{matrix.distro}}-${{inputs.deno_v}}
             tag_d: dojyorin/deno:${{matrix.distro}}
-            tag_v: dojyorin/deno:${{needs.fetch.outputs.deno_v}}
+            tag_v: dojyorin/deno:${{inputs.deno_v}}
             tag_l: dojyorin/deno:latest
         steps:
             - name: clone repository
@@ -39,7 +29,7 @@ jobs:
               with:
                 username: ${{github.repository_owner}}
                 password: ${{secrets.DOCKERHUB_KEY}}
-            - name: build image
+            - name: build and push image
               uses: docker/build-push-action@v5
               with:
                 push: true
@@ -49,4 +39,4 @@ jobs:
                 platforms: linux/amd64
                 context: '{{defaultContext}}:./src'
                 file: ${{matrix.distro}}.dockerfile
-                build-args: DENO_VERSION=${{needs.fetch.outputs.deno_v}}
+                build-args: DENO_VERSION=${{inputs.deno_v}}
