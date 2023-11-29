@@ -2,7 +2,7 @@ name: _test
 on:
     workflow_call:
         inputs:
-            deno_v:
+            deno_version:
                 type: string
                 required: true
 jobs:
@@ -29,6 +29,6 @@ jobs:
                 platforms: linux/amd64
                 context: '{{defaultContext}}:./src'
                 file: ${{matrix.distro}}.dockerfile
-                build-args: DENO_VERSION=${{inputs.deno_v}}
+                build-args: DENO_VERSION=${{inputs.deno_version}}
             - name: test image
               run: docker run --rm --init ${{github.sha}} eval -p 'new Date()'
