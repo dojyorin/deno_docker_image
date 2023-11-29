@@ -22,10 +22,10 @@ Easy to introduce in your project.
 **As single image**
 ```sh
 # Run REPL.
-docker run --init --rm -it denoland/deno:latest
+docker run --rm --init -it dojyorin/deno:latest
 
 # Run script.
-docker run --init --rm -p 0.0.0.0:80:8080 -v /project:/project:ro denoland/deno:latest run /project/main.ts
+docker run --rm --init --restart always -p 0.0.0.0:8000:80 -v ./src:/data:ro dojyorin/deno:latest run /data/main.ts
 ```
 
 **As compose**
@@ -36,20 +36,20 @@ services:
     init: true
     restart: always
     ports:
-        - 0.0.0.0:80:8000
+        - 0.0.0.0:8000:80
     volumes:
-        - /project:/project:ro
+        - ./src:/data:ro
     command:
         - run
-        - /project/main.ts
+        - /data/main.ts
 ```
 
 **As base image**
 ```dockerfile
 FROM dojyorin/deno:latest
-COPY /project/* /project/
-EXPOSE 8000
-CMD ["run", "/project/main.ts"]
+COPY ./src /data
+EXPOSE 80
+CMD ["run", "/data/main.ts"]
 ```
 
 # Difference with official image
