@@ -1,0 +1,45 @@
+{
+    "name": "cron",
+    "on": {
+        "schedule": [{
+            "cron": "0 6 * * *"
+        }]
+    },
+    "jobs": {
+        "fetch": {
+            "uses": "./.github/workflows/action_fetch.yaml"
+        },
+        "compare": {
+            "name": "compare",
+            "runs-on": "ubuntu-latest",
+            "needs": [
+                "fetch"
+            ],
+            "steps": [{
+                "name": "compare dockerhub tag and deno latest version",
+                "run": "! curl -Ls https://registry.hub.docker.com/v2/repositories/dojyorin/deno/tags?page_size=100 | yq '\"v\" + .results[].name' | grep -q ${{needs.fetch.outputs.deno_v}}"
+            }]
+        },
+        "test": {
+            "uses": "./.github/workflows/action_test.yaml",
+            "with": {
+                "deno_v": "${{needs.fetch.outputs.deno_v}}"
+            },
+            "needs": [
+                "fetch",
+                "compare"
+            ]
+        },
+        "push": {
+            "uses": "./.github/workflows/action_push.yaml",
+            "with": {
+                "deno_v": "${{needs.fetch.outputs.deno_v}}"
+            },
+            "needs": [
+                "fetch",
+                "compare",
+                "test"
+            ]
+        }
+    }
+}
