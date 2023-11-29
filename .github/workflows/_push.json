@@ -3,7 +3,7 @@
     "on": {
         "workflow_call": {
             "inputs": {
-                "deno_v": {
+                "deno_version": {
                     "type": "string",
                     "required": true
                 }
@@ -24,9 +24,9 @@
                 }
             },
             "env": {
-                "tag_f": "dojyorin/deno:${{matrix.distro}}-${{inputs.deno_v}}",
+                "tag_f": "dojyorin/deno:${{matrix.distro}}-${{inputs.deno_version}}",
                 "tag_d": "dojyorin/deno:${{matrix.distro}}",
-                "tag_v": "dojyorin/deno:${{inputs.deno_v}}",
+                "tag_v": "dojyorin/deno:${{inputs.deno_version}}",
                 "tag_l": "dojyorin/deno:latest"
             },
             "steps": [{
@@ -53,7 +53,7 @@
                     "platforms": "linux/amd64",
                     "context": "{{defaultContext}}:./src",
                     "file": "${{matrix.distro}}.dockerfile",
-                    "build-args": "DENO_VERSION=${{inputs.deno_v}}"
+                    "build-args": "DENO_VERSION=${{inputs.deno_version}}"
                 }
             }]
         }

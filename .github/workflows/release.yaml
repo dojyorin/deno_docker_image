@@ -18,13 +18,14 @@ jobs:
     test:
         uses: ./.github/workflows/_test.yaml
         with:
-            deno_v: ${{needs.fetch.outputs.deno_v}}
+            deno_version: ${{needs.fetch.outputs.deno_version}}
         needs:
             - fetch
     push:
         uses: ./.github/workflows/_push.yaml
+        secrets: inherit
         with:
-            deno_v: ${{needs.fetch.outputs.deno_v}}
+            deno_version: ${{needs.fetch.outputs.deno_version}}
         needs:
             - fetch
             - test
