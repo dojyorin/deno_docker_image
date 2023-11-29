@@ -1,0 +1,53 @@
+{
+    "name": "action_test",
+    "on": {
+        "workflow_call": {
+            "inputs": {
+                "deno_v": {
+                    "type": "string",
+                    "required": true
+                }
+            }
+        }
+    },
+    "jobs": {
+        "test": {
+            "name": "test: ${{matrix.distro}}",
+            "runs-on": "ubuntu-latest",
+            "strategy": {
+                "fail-fast": true,
+                "matrix": {
+                    "distro": [
+                        "alpine",
+                        "distroless"
+                    ]
+                }
+            },
+            "env": {
+                "tag_l": "dojyorin/deno:latest"
+            },
+            "steps": [{
+                "name": "clone repository",
+                "uses": "actions/checkout@v3"
+            }, {
+                "name": "install docker-qemu",
+                "uses": "docker/setup-qemu-action@v3"
+            }, {
+                "name": "build image",
+                "uses": "docker/build-push-action@v5",
+                "with": {
+                    "pull": true,
+                    "no-cache": true,
+                    "tags": "${{env.tag_l}}",
+                    "platforms": "linux/amd64",
+                    "context": "{{defaultContext}}:./src",
+                    "file": "${{matrix.distro}}.dockerfile",
+                    "build-args": "DENO_VERSION=${{inputs.deno_v}}"
+                }
+            }, {
+                "name": "test image",
+                "run": "docker run --init --rm ${{env.tag_l}} eval -p 'new Date()'"
+            }]
+        }
+    }
+}

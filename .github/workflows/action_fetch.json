@@ -1,0 +1,26 @@
+{
+    "name": "action_fetch",
+    "on": {
+        "workflow_call": {
+            "outputs": {
+                "deno_v": {
+                    "value": "${{jobs.fetch.outputs.deno_v}}"
+                }
+            }
+        }
+    },
+    "jobs": {
+        "fetch": {
+            "name": "fetch: deno latest version",
+            "runs-on": "ubuntu-latest",
+            "outputs": {
+                "deno_v": "${{steps.deno_v.outputs.value}}"
+            },
+            "steps": [{
+                "id": "deno_v",
+                "name": "get deno latest version",
+                "run": "echo value=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.output}}"
+            }]
+        }
+    }
+}

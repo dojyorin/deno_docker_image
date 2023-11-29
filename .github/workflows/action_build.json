@@ -1,0 +1,61 @@
+{
+    "name": "action_build",
+    "on": {
+        "workflow_call": {
+            "inputs": {
+                "deno_v": {
+                    "type": "string",
+                    "required": true
+                }
+            }
+        }
+    },
+    "jobs": {
+        "build": {
+            "name": "build: ${{matrix.distro}}",
+            "runs-on": "ubuntu-latest",
+            "strategy": {
+                "fail-fast": true,
+                "matrix": {
+                    "distro": [
+                        "alpine",
+                        "distroless"
+                    ]
+                }
+            },
+            "env": {
+                "tag_f": "dojyorin/deno:${{matrix.distro}}-${{inputs.deno_v}}",
+                "tag_d": "dojyorin/deno:${{matrix.distro}}",
+                "tag_v": "dojyorin/deno:${{inputs.deno_v}}",
+                "tag_l": "dojyorin/deno:latest"
+            },
+            "steps": [{
+                "name": "clone repository",
+                "uses": "actions/checkout@v3"
+            }, {
+                "name": "install docker-qemu",
+                "uses": "docker/setup-qemu-action@v3"
+            }, {
+                "name": "login dockerhub",
+                "uses": "docker/login-action@v3",
+                "with": {
+                    "username": "${{github.repository_owner}}",
+                    "password": "${{secrets.DOCKERHUB_KEY}}"
+                }
+            }, {
+                "name": "build image",
+                "uses": "docker/build-push-action@v5",
+                "with": {
+                    "push": true,
+                    "pull": true,
+                    "no-cache": true,
+                    "tags": "${{env.tag_f}},${{env.tag_d}}${{matrix.distro == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || ''}}",
+                    "platforms": "linux/amd64",
+                    "context": "{{defaultContext}}:./src",
+                    "file": "${{matrix.distro}}.dockerfile",
+                    "build-args": "DENO_VERSION=${{inputs.deno_v}}"
+                }
+            }]
+        }
+    }
+}
