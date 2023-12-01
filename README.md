@@ -9,8 +9,9 @@ The simple and small deno docker image.
 
 This image is published on DockerHub and synchronized with latest version of [denoland/deno](https://github.com/denoland/deno) every day at `06:00` UTC.
 
-- Distroless: [dojyorin/deno:distroless](https://hub.docker.com/r/dojyorin/deno/tags?name=distroless) (default)
-- Alpine: [dojyorin/deno:alpine](https://hub.docker.com/r/dojyorin/deno/tags?name=alpine)
+Now, let's start using it!
+
+- [`docker.io/dojyorin/deno`](https://hub.docker.com/r/dojyorin/deno)
 
 # Tags
 
@@ -32,7 +33,7 @@ Easy to introduce in your project.
 docker run --rm --init -it dojyorin/deno:latest
 
 # Run script.
-docker run --rm --init --restart always -p 0.0.0.0:8000:80 -v ./src:/data:ro dojyorin/deno:latest run /data/main.ts
+docker run --rm --init --restart always -p 0.0.0.0:1993:8000 -v ./src:/data:ro dojyorin/deno:latest run /data/main.ts
 ```
 
 **As compose**
@@ -43,7 +44,7 @@ services:
     init: true
     restart: always
     ports:
-        - 0.0.0.0:8000:80
+        - 0.0.0.0:1993:8000
     volumes:
         - ./src:/data:ro
     command:
@@ -55,13 +56,13 @@ services:
 ```dockerfile
 FROM dojyorin/deno:latest
 COPY ./src /data
-EXPOSE 80
+EXPOSE 8000
 CMD ["run", "/data/main.ts"]
 ```
 
 # Difference with official image
 
-This project was created to solve the problems faced by [deno_docker](https://github.com/denoland/deno_docker) official images.
+This project was created to solve some issues by [deno_docker](https://github.com/denoland/deno_docker) official images.
 
 - [tini](https://github.com/krallin/tini) is redundant
 - Alpine dependent on third-party image
