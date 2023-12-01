@@ -12,11 +12,18 @@ This image is published on DockerHub and synchronized with latest version of [de
 - Distroless: [dojyorin/deno:distroless](https://hub.docker.com/r/dojyorin/deno/tags?name=distroless) (default)
 - Alpine: [dojyorin/deno:alpine](https://hub.docker.com/r/dojyorin/deno/tags?name=alpine)
 
+# Tags
+
+|OS|Tags|Arch|
+|:--|:--|:--|
+|Distroless|`latest` `vX.Y.Z` `distroless` `distroless-vX.Y.Z`|`amd64`|
+|Alpine|`alpine` `alpine-vX.Y.Z`|`amd64`|
+
 # How to use
 Easy to introduce in your project.
 
 **⚠ Notes ⚠**
-- When starting container, be sure to add `--init` flag (`docker run`) or `init: true` property (`docker-compose.yml`) to avoid [PID 1 Problem](https://www.docker.com/blog/keep-nodejs-rockin-in-docker#:~:text=PID%201%20Problem).
+- When starting container, be sure to add `--init` flag (`docker run`) or `init: true` property (`docker-compose.yml`) to avoid [PID1 problem](https://www.docker.com/blog/keep-nodejs-rockin-in-docker#:~:text=PID%201%20Problem).
 - For security reasons, default runtime user is `nonroot` in distroless and `nobody` in other distributions.
 
 **As single image**
