@@ -8,7 +8,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: clone repository
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
             - name: dispatch release
               uses: softprops/action-gh-release@v1
               with:

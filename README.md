@@ -17,7 +17,7 @@ Now, let's start using it!
 
 |OS|Tags|Arch|
 |:--|:--|:--|
-|Distroless|`latest` `vX.Y.Z` `distroless` `distroless-vX.Y.Z`|`amd64`|
+|Distroless (default)|`latest` `vX.Y.Z` `distroless` `distroless-vX.Y.Z`|`amd64`|
 |Alpine|`alpine` `alpine-vX.Y.Z`|`amd64`|
 
 # How to use
