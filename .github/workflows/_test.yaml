@@ -17,7 +17,7 @@ jobs:
                     - distroless
         steps:
             - name: clone repository
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
             - name: install docker-qemu
               uses: docker/setup-qemu-action@v3
             - name: build image
