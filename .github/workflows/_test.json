@@ -47,7 +47,7 @@
                 }
             }, {
                 "name": "test image",
-                "run": "docker run --rm --init ${{github.sha}} eval -p 'new Date()'"
+                "run": "docker run --rm --init --platform linux/${{matrix.arch}} ${{github.sha}} eval -p 'new Date()'"
             }]
         }
     }
