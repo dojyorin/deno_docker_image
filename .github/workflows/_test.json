@@ -20,6 +20,10 @@
                     "distro": [
                         "alpine",
                         "distroless"
+                    ],
+                    "arch": [
+                        "linux/amd64",
+                        "linux/arm64"
                     ]
                 }
             },
@@ -36,7 +40,7 @@
                     "pull": true,
                     "no-cache": true,
                     "tags": "${{github.sha}}",
-                    "platforms": "linux/amd64",
+                    "platforms": "${{matrix.arch}}",
                     "context": "{{defaultContext}}:./src",
                     "file": "${{matrix.distro}}.dockerfile",
                     "build-args": "DENO_VERSION=${{inputs.deno_version}}"
