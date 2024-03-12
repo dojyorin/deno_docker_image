@@ -34,4 +34,4 @@ jobs:
                 file: ${{matrix.distro}}.dockerfile
                 build-args: DENO_VERSION=${{inputs.deno_version}}
             - name: test image
-              run: docker run --rm --init --platform linux/${{matrix.arch}} ${{github.sha}} eval -p 'new Date()'
+              run: docker run --rm --init ${{matrix.arch}}/${{github.sha}} eval -p 'new Date()'
