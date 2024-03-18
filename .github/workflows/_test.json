@@ -12,7 +12,7 @@
     },
     "jobs": {
         "job": {
-            "name": "${{matrix.os}}:${{matrix.arch}}",
+            "name": "${{matrix.os}}-${{matrix.arch}}",
             "runs-on": "ubuntu-latest",
             "strategy": {
                 "fail-fast": true,
@@ -34,13 +34,17 @@
                 "name": "setup docker-qemu",
                 "uses": "docker/setup-qemu-action@v3"
             }, {
-                "name": "build image",
+                "name": "setup docker-buildx",
+                "uses": "docker/setup-buildx-action@v3"
+            }, {
+                "name": "build and load image",
                 "uses": "docker/build-push-action@v5",
                 "with": {
+                    "load": true,
                     "pull": true,
                     "no-cache": true,
                     "tags": "${{github.sha}}",
-                    "platforms": "linux/${{matrix.arch}}",
+                    "platforms": "linux/amd64,linux/arm64",
                     "context": "{{defaultContext}}:./src",
                     "file": "${{matrix.os}}.dockerfile",
                     "build-args": "DENO_VERSION=${{inputs.deno_version}}"
