@@ -32,7 +32,7 @@ jobs:
                 pull: true
                 no-cache: true
                 tags: ${{github.sha}}
-                platforms: linux/amd64,linux/arm64
+                platforms: linux/${{matrix.arch}}
                 context: '{{defaultContext}}:./src'
                 file: ${{matrix.os}}.dockerfile
                 build-args: DENO_VERSION=${{inputs.deno_version}}
