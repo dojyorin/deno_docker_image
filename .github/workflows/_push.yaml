@@ -6,8 +6,8 @@ on:
                 type: string
                 required: true
 jobs:
-    push:
-        name: 'push: ${{matrix.os}}'
+    job:
+        name: ${{matrix.os}}
         runs-on: ubuntu-latest
         strategy:
             fail-fast: true
