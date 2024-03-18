@@ -12,5 +12,5 @@ jobs:
             deno_version: ${{steps.step.outputs.deno_version}}
         steps:
             - id: step
-              name: get deno latest version
+              name: fetch deno latest version
               run: echo deno_version=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.output}}
