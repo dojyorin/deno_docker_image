@@ -6,23 +6,15 @@ on:
                 type: string
                 required: true
 jobs:
-    push:
-        name: 'push: ${{matrix.distro}}/${{matrix.arch}}'
+    job:
+        name: ${{matrix.os}}
         runs-on: ubuntu-latest
         strategy:
             fail-fast: true
             matrix:
-                distro:
+                os:
                     - alpine
                     - distroless
-                arch:
-                    - amd64
-                    - arm64
-        env:
-            tag_f: dojyorin/deno:${{matrix.distro}}-${{inputs.deno_version}}
-            tag_d: dojyorin/deno:${{matrix.distro}}
-            tag_v: dojyorin/deno:${{inputs.deno_version}}
-            tag_l: dojyorin/deno:latest
         steps:
             - name: clone repository
               uses: actions/checkout@v4
@@ -39,8 +31,8 @@ jobs:
                 push: true
                 pull: true
                 no-cache: true
-                tags: ${{env.tag_f}},${{env.tag_d}}${{matrix.distro == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || ''}}
-                platforms: linux/${{matrix.arch}}
+                tags: ${{github.repository_owner}}/deno:${{matrix.os}}-${{inputs.deno_version}},${{github.repository_owner}}/deno:${{matrix.os}},${{matrix.os == 'distroless' && format('{0}/deno:{1},{0}/deno:latest', github.repository_owner, inputs.deno_version) || ''}}
+                platforms: linux/amd64,linux/arm64
                 context: '{{defaultContext}}:./src'
-                file: ${{matrix.distro}}.dockerfile
+                file: ${{matrix.os}}.dockerfile
                 build-args: DENO_VERSION=${{inputs.deno_version}}

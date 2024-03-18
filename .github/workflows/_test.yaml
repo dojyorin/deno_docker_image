@@ -6,13 +6,13 @@ on:
                 type: string
                 required: true
 jobs:
-    test:
-        name: 'test: ${{matrix.distro}}/${{matrix.arch}}'
+    job:
+        name: ${{matrix.os}}/${{matrix.arch}}
         runs-on: ubuntu-latest
         strategy:
             fail-fast: true
             matrix:
-                distro:
+                os:
                     - alpine
                     - distroless
                 arch:
@@ -31,7 +31,7 @@ jobs:
                 tags: ${{github.sha}}
                 platforms: linux/${{matrix.arch}}
                 context: '{{defaultContext}}:./src'
-                file: ${{matrix.distro}}.dockerfile
+                file: ${{matrix.os}}.dockerfile
                 build-args: DENO_VERSION=${{inputs.deno_version}}
             - name: test image
               run: docker run --rm --init --platform linux/${{matrix.arch}} ${{github.sha}} eval -p 'new Date()'
