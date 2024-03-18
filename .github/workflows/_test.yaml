@@ -7,7 +7,7 @@ on:
                 required: true
 jobs:
     job:
-        name: ${{matrix.os}} / ${{matrix.arch}}
+        name: ${{matrix.os}}:${{matrix.arch}}
         runs-on: ubuntu-latest
         strategy:
             fail-fast: true
@@ -23,8 +23,13 @@ jobs:
               uses: actions/checkout@v4
             - name: setup docker-qemu
               uses: docker/setup-qemu-action@v3
+              with:
+                platforms: amd64,arm64
             - name: setup docker-buildx
               uses: docker/setup-buildx-action@v3
+              with:
+                cache-binary: false
+                cleanup: false
             - name: build image
               uses: docker/build-push-action@v5
               with:
