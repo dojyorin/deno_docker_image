@@ -7,7 +7,7 @@ on:
                 required: true
 jobs:
     push:
-        name: 'push: ${{matrix.distro}}/${{matrix.arch}}'
+        name: 'push: ${{matrix.distro}}'
         runs-on: ubuntu-latest
         strategy:
             fail-fast: true
@@ -15,9 +15,6 @@ jobs:
                 distro:
                     - alpine
                     - distroless
-                arch:
-                    - amd64
-                    - arm64
         env:
             tag_f: dojyorin/deno:${{matrix.distro}}-${{inputs.deno_version}}
             tag_d: dojyorin/deno:${{matrix.distro}}
@@ -40,7 +37,7 @@ jobs:
                 pull: true
                 no-cache: true
                 tags: ${{env.tag_f}},${{env.tag_d}}${{matrix.distro == 'distroless' && format(',{0},{1}', env.tag_v, env.tag_l) || ''}}
-                platforms: linux/${{matrix.arch}}
+                platforms: linux/amd64,linux/arm64
                 context: '{{defaultContext}}:./src'
                 file: ${{matrix.distro}}.dockerfile
                 build-args: DENO_VERSION=${{inputs.deno_version}}
