@@ -7,7 +7,7 @@ on:
                 required: true
 jobs:
     job:
-        name: ${{matrix.os}}/${{matrix.arch}}
+        name: ${{matrix.os}}-${{matrix.arch}}
         runs-on: ubuntu-latest
         strategy:
             fail-fast: true
@@ -21,11 +21,14 @@ jobs:
         steps:
             - name: clone repository
               uses: actions/checkout@v4
-            - name: install docker-qemu
+            - name: setup docker-qemu
               uses: docker/setup-qemu-action@v3
-            - name: build image
+            - name: setup docker-buildx
+              uses: docker/setup-buildx-action@v3
+            - name: build and load image
               uses: docker/build-push-action@v5
               with:
+                load: true
                 pull: true
                 no-cache: true
                 tags: ${{github.sha}}
