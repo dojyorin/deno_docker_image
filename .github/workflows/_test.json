@@ -12,7 +12,7 @@
     },
     "jobs": {
         "test": {
-            "name": "test: ${{matrix.distro}}",
+            "name": "test: ${{matrix.distro}}/${{matrix.arch}}",
             "runs-on": "ubuntu-latest",
             "strategy": {
                 "fail-fast": true,
@@ -20,6 +20,10 @@
                     "distro": [
                         "alpine",
                         "distroless"
+                    ],
+                    "arch": [
+                        "amd64",
+                        "arm64"
                     ]
                 }
             },
@@ -36,14 +40,14 @@
                     "pull": true,
                     "no-cache": true,
                     "tags": "${{github.sha}}",
-                    "platforms": "linux/amd64",
+                    "platforms": "linux/${{matrix.arch}}",
                     "context": "{{defaultContext}}:./src",
                     "file": "${{matrix.distro}}.dockerfile",
                     "build-args": "DENO_VERSION=${{inputs.deno_version}}"
                 }
             }, {
                 "name": "test image",
-                "run": "docker run --rm --init ${{github.sha}} eval -p 'new Date()'"
+                "run": "docker run --rm --init --platform linux/${{matrix.arch}} ${{github.sha}} eval -p 'new Date()'"
             }]
         }
     }
