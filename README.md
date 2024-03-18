@@ -15,15 +15,15 @@ Now, let's start using it!
 
 # Tags
 
-|OS|Tags|Arch|
+|OS|Tag|Arch|
 |:--|:--|:--|
-|Distroless (default)|`latest` `vX.Y.Z` `distroless` `distroless-vX.Y.Z`|`amd64` `arm64`|
-|Alpine|`alpine` `alpine-vX.Y.Z`|`amd64` `arm64`|
+|[distroless](https://github.com/googlecontainertools/distroless) (default)|`latest` `vX.Y.Z` `distroless` `distroless-vX.Y.Z`|`amd64` `arm64`|
+|[alpine](https://github.com/alpinelinux/docker-alpine)|`alpine` `alpine-vX.Y.Z`|`amd64` `arm64`|
 
 # How to use
 Easy to introduce in your project.
 
-**⚠ Notes ⚠**
+**⚠ Note ⚠**
 - When starting container, be sure to add `--init` flag (`docker run`) or `init: true` property (`docker-compose.yml`) to avoid [PID1 problem](https://www.docker.com/blog/keep-nodejs-rockin-in-docker#:~:text=PID%201%20Problem).
 - For security reasons, default runtime user is `nonroot` in distroless and `nobody` in other distributions.
 
@@ -33,7 +33,7 @@ Easy to introduce in your project.
 docker run --rm --init -it dojyorin/deno:latest
 
 # Run script.
-docker run --rm --init --restart always -p 0.0.0.0:1993:8000 -v ./src:/data:ro dojyorin/deno:latest run /data/main.ts
+docker run --rm --init --restart always -p 0.0.0.0:5000:8000 -v $(pwd)/src:/data:ro dojyorin/deno:latest run /data/main.ts
 ```
 
 **As compose**
@@ -44,7 +44,7 @@ services:
     init: true
     restart: always
     ports:
-        - 0.0.0.0:1993:8000
+        - 0.0.0.0:5000:8000
     volumes:
         - ./src:/data:ro
     command:
