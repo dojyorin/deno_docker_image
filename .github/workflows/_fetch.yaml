@@ -9,7 +9,7 @@ jobs:
         name: deno version
         runs-on: ubuntu-latest
         outputs:
-            deno_version: ${{steps.0.outputs.deno_version}}
+            deno_version: ${{steps[0].outputs.deno_version}}
         steps:
             - id: "0"
               name: fetch deno latest version
