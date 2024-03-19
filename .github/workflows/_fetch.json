@@ -14,10 +14,10 @@
             "name": "deno version",
             "runs-on": "ubuntu-latest",
             "outputs": {
-                "deno_version": "${{steps[0].outputs.deno_version}}"
+                "deno_version": "${{steps.0.outputs.deno_version}}"
             },
             "steps": [{
-                "id": "step",
+                "id": "0",
                 "name": "fetch deno latest version",
                 "run": "echo deno_version=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq -o y '.tag_name') >> ${{github.output}}"
             }]
