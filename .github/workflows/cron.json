@@ -10,14 +10,18 @@
             "uses": "./.github/workflows/_fetch.yaml"
         },
         "compare": {
-            "name": "compare",
+            "name": "compare version",
             "runs-on": "ubuntu-latest",
+            "outputs": {
+                "deno_latest": "${{steps.step.outputs.value}}"
+            },
             "needs": [
                 "fetch"
             ],
             "steps": [{
+                "id": "step",
                 "name": "compare dockerhub tag and deno latest version",
-                "run": "echo deno_latest=$(curl -Ls https://registry.hub.docker.com/v2/repositories/dojyorin/deno/tags?page_size=100 | yq -o y '.results[].name' | grep -q ${{needs.fetch.outputs.deno_version}}; echo ${?}) >> ${{github.output}}"
+                "run": "echo value=$(curl -Ls https://registry.hub.docker.com/v2/repositories/dojyorin/deno/tags?page_size=100 | yq -o y '.results[].name' | grep -q ${{needs.fetch.outputs.deno_version}}; echo ${?}) >> ${{github.output}}"
             }]
         },
         "test": {
