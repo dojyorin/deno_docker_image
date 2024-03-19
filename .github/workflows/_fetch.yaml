@@ -9,8 +9,8 @@ jobs:
         name: deno version
         runs-on: ubuntu-latest
         outputs:
-            deno_version: ${{steps[0].outputs.deno_version}}
+            deno_version: ${{steps.step.outputs.deno_version}}
         steps:
-            - id: "0"
+            - id: step
               name: fetch deno latest version
               run: echo deno_version=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq -o y '.tag_name') >> ${{github.output}}
