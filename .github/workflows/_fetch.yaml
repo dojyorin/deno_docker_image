@@ -3,14 +3,14 @@ on:
     workflow_call:
         outputs:
             deno_version:
-                value: ${{jobs.job.outputs.deno_version}}
+                value: ${{jobs.job.outputs.value}}
 jobs:
     job:
         name: deno version
         runs-on: ubuntu-latest
         outputs:
-            deno_version: ${{steps.step.outputs.deno_version}}
+            value: ${{steps.step.outputs.value}}
         steps:
             - id: step
               name: fetch deno latest version
-              run: echo deno_version=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq '.tag_name') >> ${{github.output}}
+              run: echo value=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq -o y '.tag_name') >> ${{github.output}}
