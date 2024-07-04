@@ -29,11 +29,11 @@ Easy to introduce in your project.
 
 **As single image**
 ```sh
-# Run REPL.
-docker run --rm --init -it dojyorin/deno:latest
+# Run repl
+docker run --init --rm -it dojyorin/deno:latest
 
-# Run script.
-docker run --rm --init --restart always -p 0.0.0.0:5000:8000 -v $(pwd)/src:/data:ro dojyorin/deno:latest run /data/main.ts
+# Run script
+docker run --init --rm --restart always -p 0.0.0.0:8000:8000 -v $(pwd)/src:/data:ro dojyorin/deno:latest run /data/main.ts
 ```
 
 **As compose**
@@ -44,7 +44,7 @@ services:
     init: true
     restart: always
     ports:
-        - 0.0.0.0:5000:8000
+        - 0.0.0.0:8000:8000
     volumes:
         - ./src:/data:ro
     command:

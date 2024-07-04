@@ -26,7 +26,7 @@ jobs:
             - name: setup docker-buildx
               uses: docker/setup-buildx-action@v3
             - name: build and load image
-              uses: docker/build-push-action@v5
+              uses: docker/build-push-action@v6
               with:
                 load: true
                 pull: true
@@ -37,4 +37,4 @@ jobs:
                 file: ${{matrix.os}}.dockerfile
                 build-args: DENO_VERSION=${{inputs.deno_version}}
             - name: test image
-              run: docker run --rm --init --platform linux/${{matrix.arch}} ${{github.sha}} eval -p 'new Date()'
+              run: docker run --init --rm --platform linux/${{matrix.arch}} ${{github.sha}} eval -p 'new Date()'
