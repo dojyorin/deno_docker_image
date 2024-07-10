@@ -2,7 +2,7 @@ FROM alpine:latest AS deno
 
 ARG DENO_VERSION
 
-RUN apk --update --no-cache add curl
+RUN apk add -Uu --no-cache curl
 RUN curl -Ls https://github.com/denoland/deno/releases/download/${DENO_VERSION}/deno-$(arch)-unknown-linux-gnu.zip | unzip -pq - 'deno' > /tmp/deno
 
 FROM gcr.io/distroless/cc-debian12:latest AS cc
