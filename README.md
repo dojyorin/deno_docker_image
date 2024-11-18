@@ -1,4 +1,4 @@
-# **Deno Docker Image**
+# Deno Docker Image
 ![actions:test](https://github.com/dojyorin/deno_docker_image/actions/workflows/test.yaml/badge.svg)
 ![actions:release](https://github.com/dojyorin/deno_docker_image/actions/workflows/release.yaml/badge.svg)
 ![actions:cron](https://github.com/dojyorin/deno_docker_image/actions/workflows/cron.yaml/badge.svg)
@@ -13,14 +13,13 @@ Now, let's start using it!
 
 - [`docker.io/dojyorin/deno`](https://hub.docker.com/r/dojyorin/deno)
 
-# Tags
-
+## Tags
 |OS|Tag|Arch|
 |:--|:--|:--|
 |[distroless](https://github.com/googlecontainertools/distroless) (default)|`latest` `vX.Y.Z` `distroless` `distroless-vX.Y.Z`|`amd64` `arm64`|
 |[alpine](https://github.com/alpinelinux/docker-alpine)|`alpine` `alpine-vX.Y.Z`|`amd64` `arm64`|
 
-# How to use
+## How to use
 Easy to introduce in your project.
 
 **⚠ Note ⚠**
@@ -60,12 +59,11 @@ EXPOSE 8000
 CMD ["run", "/data/main.ts"]
 ```
 
-# Difference with official image
-
+## Difference from official image
 This project was created to solve some issues by [deno_docker](https://github.com/denoland/deno_docker) official images.
 
-- [tini](https://github.com/krallin/tini) is redundant
-- Alpine dependent on third-party image
-- Using old debian in Distroless (Uses 11, latest is 12)
+- [tini](https://github.com/krallin/tini) is redundant.
+- Alpine relies on third-party image.
+- Distroless refers to old debian. (Using 11, latest is 12)
 
 If official images solve those issues, this project will be unnecessary...
