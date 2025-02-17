@@ -21,7 +21,7 @@
             "steps": [{
                 "id": "step",
                 "name": "compare dockerhub tag and deno latest version",
-                "run": "echo value=$(curl -Ls https://registry.hub.docker.com/v2/repositories/dojyorin/deno/tags?page_size=100 | yq -o y '.results[].name' | grep -q ${{needs.fetch.outputs.deno_version}}; echo ${?}) >> ${{github.output}}"
+                "run": "echo value=$(curl -Ls https://registry.hub.docker.com/v2/repositories/dojyorin/deno/tags?page_size=100 | yq -p j '.results[].name' | grep -q ${{needs.fetch.outputs.deno_version}}; echo ${?}) >> ${{github.output}}"
             }]
         },
         "test": {
