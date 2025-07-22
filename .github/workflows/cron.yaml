@@ -15,7 +15,7 @@ jobs:
         steps:
             - id: step
               name: compare dockerhub tag and deno latest version
-              run: echo value=$(curl -Ls https://registry.hub.docker.com/v2/repositories/dojyorin/deno/tags?page_size=100 | yq -p j '.results[].name' | grep -q ${{needs.fetch.outputs.deno_version}}; echo ${?}) >> ${{github.output}}
+              run: echo value=$(curl -Ls https://registry.hub.docker.com/v2/repositories/dojyorin/deno/tags?page_size=100 | yq -r -p j '.results[].name' | grep -q ${{needs.fetch.outputs.deno_version}}; echo ${?}) >> ${{github.output}}
     test:
         if: ${{needs.compare.outputs.deno_latest == 1}}
         uses: ./.github/workflows/_test.yaml

@@ -13,4 +13,4 @@ jobs:
         steps:
             - id: step
               name: fetch deno latest version
-              run: echo value=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq -p j '.tag_name') >> ${{github.output}}
+              run: echo value=$(curl -Ls https://api.github.com/repos/denoland/deno/releases/latest | yq -r -p j '.tag_name') >> ${{github.output}}
