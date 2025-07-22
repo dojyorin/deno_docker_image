@@ -11,7 +11,7 @@ FROM alpine:latest AS sym
 
 COPY --from=cc --chmod=755 --chown=root:root /lib/*-linux-gnu/ld-linux-* /usr/local/lib/
 
-RUN mkdir -p /tmp/lib
+RUN mkdir -p -m 755 /tmp/lib
 RUN ln -s /usr/local/lib/ld-linux-* /tmp/lib/
 
 FROM alpine:latest
